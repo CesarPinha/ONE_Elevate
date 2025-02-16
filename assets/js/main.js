@@ -316,6 +316,15 @@ var settings = {
 			$header 	= $('#header'),
 			$banner 	= $('.banner');
 
+			$window.on('load', function() {
+				// Mantén el código existente de is-loading
+				window.setTimeout(function() {
+					$body.removeClass('is-loading');
+					// Asegurarse de que estamos al inicio después de que todo esté cargado
+					window.scrollTo(0, 0);
+				}, 100);
+			});
+			
 		// Disable animations/transitions until the page has loaded.
 			$body.addClass('is-loading');
 
