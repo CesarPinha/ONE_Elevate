@@ -1,9 +1,3 @@
-/*
-	Hielo by TEMPLATED
-	templated.co @templatedco
-	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
-*/
-
 var settings = {
 
 	banner: {
@@ -144,6 +138,74 @@ var settings = {
 			if ($slides.length == 1)
 				options.indicators = false;
 
+			var touchStartX = 0,
+            touchEndX = 0,
+            minSwipeDistance = 50;
+
+        // Función para ir a la siguiente diapositiva
+        function nextSlide() {
+            if (!isLocked) {
+                current = (current + 1) % slides.length;
+                $this._switchTo(current, true);
+                resetInterval();
+            }
+        }
+
+        // Función para ir a la diapositiva anterior
+        function prevSlide() {
+            if (!isLocked) {
+                current = (current - 1 + slides.length) % slides.length;
+                $this._switchTo(current, true);
+                resetInterval();
+            }
+        }
+
+        // Función para reiniciar el intervalo
+        function resetInterval() {
+            if (intervalId) {
+                window.clearInterval(intervalId);
+                intervalId = window.setInterval(function() {
+                    current = (current + 1) % slides.length;
+                    $this._switchTo(current);
+                }, options.delay);
+            }
+        }
+
+        // Eventos de teclado
+        $(document).on('keydown', function(e) {
+            if (e.key === 'ArrowLeft') {
+                prevSlide();
+            } else if (e.key === 'ArrowRight') {
+                nextSlide();
+            }
+        });
+
+        // Eventos táctiles
+        $this
+            .on('touchstart', function(e) {
+                touchStartX = e.originalEvent.touches[0].clientX;
+            })
+            .on('touchend', function(e) {
+                touchEndX = e.originalEvent.changedTouches[0].clientX;
+                var swipeDistance = touchEndX - touchStartX;
+
+                if (Math.abs(swipeDistance) > minSwipeDistance) {
+                    if (swipeDistance > 0) {
+                        prevSlide();
+                    } else {
+                        nextSlide();
+                    }
+                }
+            })
+            .on('touchmove', function(e) {
+                // Prevenir el scroll mientras se hace swipe
+                if (Math.abs(touchEndX - touchStartX) > minSwipeDistance) {
+                    e.preventDefault();
+                }
+            });
+
+
+
 		// Functions.
 			$this._switchTo = function(x, stop) {
 
@@ -239,18 +301,13 @@ var settings = {
 				return;
 
 		// Main loop.
-			intervalId = window.setInterval(function() {
+        intervalId = window.setInterval(function() {
+            current = (current + 1) % slides.length;
+            $this._switchTo(current);
+        }, options.delay);
 
-				current++;
-
-				if (current >= slides.length)
-					current = 0;
-
-				$this._switchTo(current);
-
-			}, options.delay);
-
-	};
+        return $this;
+    };
 
 	$(function() {
 
