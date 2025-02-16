@@ -72,7 +72,7 @@
 					hideOnClick: false,
 
 				// Hide panel on escape keypress.
-					hideOnEscape: false,
+					hideOnEscape: true,
 
 				// Hide panel on swipe.
 					hideOnSwipe: false,
@@ -144,7 +144,7 @@
 				if (config.hideOnClick) {
 
 					$this.find('a')
-						.css('-webkit-tap-highlight-color', 'rgba(0, 0, 0, 0)');
+						.css('-webkit-tap-highlight-color', 'rgba(0,0,0,0)');
 
 					$this
 						.on('click', 'a', function(event) {
@@ -240,7 +240,7 @@
 
 					// Prevent vertical scrolling past the top or bottom.
 						if (($this.scrollTop() < 0 && diffY < 0)
-						|| (ts > (th - .1) && ts < (th + .5) && diffY > 0)) {
+						|| (ts > (th - 2) && ts < (th + 2) && diffY > 0)) {
 
 							event.preventDefault();
 							event.stopPropagation();
